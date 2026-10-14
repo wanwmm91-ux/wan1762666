@@ -1,0 +1,510 @@
+--[[
+    ============================================
+    WAN1762 SECURE BUILD
+    ============================================
+]]
+if not game:IsLoaded() then game.Loaded:Wait() end
+
+local _P = game:GetService("Players")
+local _R = game:GetService("ReplicatedStorage")
+local _RS = game:GetService("RunService")
+local _W = game:GetService("Workspace")
+local _U = game:GetService("UserInputService")
+
+-- ★ 混淆字符串：远程事件路径
+local _S1 = string.char(68,97,116,97,98,97,115,101)          -- Database
+local _S2 = string.char(83,101,99,117,114,105,116,121)         -- Security
+local _S3 = string.char(82,101,109,111,116,101,115)            -- Remotes
+local _S4 = string.char(73,110,118,101,110,116,111,114,121)    -- Inventory
+local _S5 = string.char(83,104,111,111,116,87,101,97,112,111,110) -- ShootWeapon
+
+-- 反调试陷阱（虚晃一枪）
+if getgenv and getgenv().____X == nil then
+    getgenv().____X = tostring(math.random(1, 999999))
+end
+
+local _LP = _P.LocalPlayer
+local _C = _W.CurrentCamera
+
+if getgenv and getgenv().W1762U then pcall(getgenv().W1762U) end
+for _, v in ipairs(_LP.PlayerGui:GetChildren()) do
+    if v.Name == "W1762UI" then v:Destroy() end
+end
+
+-- 模块获取（路径混淆）
+local _N = nil
+do
+    local _d = _R:FindFirstChild(_S1)
+    local _e = _d and _d:FindFirstChild(_S2)
+    local _f = _e and _e:FindFirstChild(_S3)
+    if _f then
+        local ok, m = pcall(require, _f)
+        if ok then _N = m end
+    end
+end
+local _SP = _N and _N[_S4] and _N[_S4][_S5]
+
+local _CF = {
+    S = false, SF = 180, TC = true, MD = 800,
+    AP = "Head",
+    E = false, EC = true, ED = true,
+}
+
+-- ============ UI ============
+local _SG = Instance.new("ScreenGui")
+_SG.Name = "W1762UI"
+_SG.ResetOnSpawn = false
+_SG.DisplayOrder = 999999
+_SG.IgnoreGuiInset = true
+_SG.Parent = _LP.PlayerGui
+
+local _B = Instance.new("TextButton")
+_B.Size = UDim2.new(0, 44, 0, 44)
+_B.Position = UDim2.new(1, -56, 0.5, -22)
+_B.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
+_B.Text = "W"
+_B.TextColor3 = Color3.fromRGB(100, 200, 255)
+_B.TextSize = 18
+_B.Font = Enum.Font.GothamBold
+_B.AutoButtonColor = false
+_B.ZIndex = 100
+_B.Parent = _SG
+Instance.new("UICorner", _B).CornerRadius = UDim.new(1, 0)
+local _BS = Instance.new("UIStroke", _B)
+_BS.Color = Color3.fromRGB(100, 200, 255)
+_BS.Thickness = 2
+
+local _PN = Instance.new("Frame")
+_PN.Size = UDim2.new(0, 220, 0, 210)
+_PN.Position = UDim2.new(0.5, -110, 0.5, -105)
+_PN.BackgroundColor3 = Color3.fromRGB(12, 15, 22)
+_PN.BorderSizePixel = 0
+_PN.Visible = false
+_PN.ZIndex = 50
+_PN.Parent = _SG
+Instance.new("UICorner", _PN).CornerRadius = UDim.new(0, 10)
+local _PS = Instance.new("UIStroke", _PN)
+_PS.Color = Color3.fromRGB(70, 90, 130)
+_PS.Thickness = 1.2
+
+local _TB = Instance.new("Frame", _PN)
+_TB.Size = UDim2.new(1, 0, 0, 30)
+_TB.BackgroundColor3 = Color3.fromRGB(18, 22, 32)
+_TB.BorderSizePixel = 0
+_TB.ZIndex = 51
+Instance.new("UICorner", _TB).CornerRadius = UDim.new(0, 10)
+
+local _TT = Instance.new("TextLabel", _TB)
+_TT.Size = UDim2.new(1, -70, 1, 0)
+_TT.Position = UDim2.new(0, 10, 0, 0)
+_TT.BackgroundTransparency = 1
+_TT.Text = "wan1762 V5.6"
+_TT.TextColor3 = Color3.fromRGB(100, 200, 255)
+_TT.TextSize = 12
+_TT.Font = Enum.Font.GothamBold
+_TT.TextXAlignment = Enum.TextXAlignment.Left
+_TT.ZIndex = 52
+
+local _CB = Instance.new("TextButton", _TB)
+_CB.Size = UDim2.new(0, 22, 0, 22)
+_CB.Position = UDim2.new(1, -28, 0, 4)
+_CB.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+_CB.Text = "X"
+_CB.TextColor3 = Color3.fromRGB(255, 255, 255)
+_CB.TextSize = 12
+_CB.Font = Enum.Font.GothamBold
+_CB.ZIndex = 52
+Instance.new("UICorner", _CB).CornerRadius = UDim.new(0, 5)
+_CB.Activated:Connect(function() _SG:Destroy() end)
+
+local _SC = Instance.new("ScrollingFrame", _PN)
+_SC.Size = UDim2.new(1, -12, 1, -38)
+_SC.Position = UDim2.new(0, 6, 0, 34)
+_SC.BackgroundTransparency = 1
+_SC.BorderSizePixel = 0
+_SC.ScrollBarThickness = 3
+_SC.ScrollBarImageColor3 = Color3.fromRGB(0, 170, 255)
+_SC.CanvasSize = UDim2.new(0, 0, 0, 0)
+_SC.AutomaticCanvasSize = Enum.AutomaticSize.Y
+_SC.ZIndex = 51
+local _SL = Instance.new("UIListLayout", _SC)
+_SL.Padding = UDim.new(0, 3)
+_SL.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- 拖动
+local _dg, _ds, _dp
+_TB.InputBegan:Connect(function(i)
+    if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
+        _dg = true _ds = i.Position _dp = _PN.Position
+    end
+end)
+_U.InputChanged:Connect(function(i)
+    if not _dg then return end
+    if i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch then
+        local d = i.Position - _ds
+        _PN.Position = UDim2.new(_dp.X.Scale, _dp.X.Offset + d.X, _dp.Y.Scale, _dp.Y.Offset + d.Y)
+    end
+end)
+_U.InputEnded:Connect(function(i)
+    if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
+        _dg = false
+    end
+end)
+
+local _bg, _bgs, _bp, _bm
+_B.InputBegan:Connect(function(i)
+    if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
+        _bg = true _bm = false _bgs = i.Position _bp = _B.Position
+    end
+end)
+_U.InputChanged:Connect(function(i)
+    if not _bg then return end
+    if i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch then
+        local d = i.Position - _bgs
+        if d.Magnitude > 15 then
+            _bm = true
+            _B.Position = UDim2.new(_bp.X.Scale, _bp.X.Offset + d.X, _bp.Y.Scale, _bp.Y.Offset + d.Y)
+        end
+    end
+end)
+_U.InputEnded:Connect(function(i)
+    if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
+        if _bg and not _bm then _PN.Visible = not _PN.Visible end
+        _bg = false
+    end
+end)
+
+local function _mkT(text, key)
+    local row = Instance.new("Frame", _SC)
+    row.Size = UDim2.new(1, 0, 0, 22)
+    row.BackgroundColor3 = Color3.fromRGB(25, 30, 42)
+    row.BorderSizePixel = 0
+    row.ZIndex = 52
+    Instance.new("UICorner", row).CornerRadius = UDim.new(0, 5)
+
+    local label = Instance.new("TextLabel", row)
+    label.Size = UDim2.new(1, -50, 1, 0)
+    label.Position = UDim2.new(0, 8, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = Color3.fromRGB(210, 220, 240)
+    label.TextSize = 11
+    label.Font = Enum.Font.Gotham
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.ZIndex = 53
+
+    local btn = Instance.new("TextButton", row)
+    btn.Size = UDim2.new(0, 34, 0, 15)
+    btn.Position = UDim2.new(1, -40, 0.5, -7)
+    btn.BackgroundColor3 = Color3.fromRGB(50, 55, 75)
+    btn.Text = ""
+    btn.AutoButtonColor = false
+    btn.ZIndex = 53
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(1, 0)
+
+    local knob = Instance.new("Frame", btn)
+    knob.Size = UDim2.new(0, 11, 0, 11)
+    knob.Position = UDim2.new(0, 2, 0.5, -5)
+    knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    knob.BorderSizePixel = 0
+    knob.ZIndex = 54
+    Instance.new("UICorner", knob).CornerRadius = UDim.new(1, 0)
+
+    local function rf()
+        if _CF[key] then
+            btn.BackgroundColor3 = Color3.fromRGB(0, 180, 100)
+            knob.Position = UDim2.new(1, -13, 0.5, -5)
+        else
+            btn.BackgroundColor3 = Color3.fromRGB(50, 55, 75)
+            knob.Position = UDim2.new(0, 2, 0.5, -5)
+        end
+    end
+    btn.Activated:Connect(function()
+        _CF[key] = not _CF[key]
+        rf()
+    end)
+    rf()
+end
+
+local function _mkS(text)
+    local l = Instance.new("TextLabel", _SC)
+    l.Size = UDim2.new(1, 0, 0, 16)
+    l.BackgroundTransparency = 1
+    l.Text = text
+    l.TextColor3 = Color3.fromRGB(100, 200, 255)
+    l.TextSize = 12
+    l.Font = Enum.Font.GothamBold
+    l.TextXAlignment = Enum.TextXAlignment.Left
+    l.ZIndex = 52
+end
+
+_mkS("子追")
+_mkT("开启子追", "S")
+_mkT("队伍检测", "TC")
+
+_mkS("ESP")
+_mkT("开启 ESP", "E")
+_mkT("ESP 队伍检测", "EC")
+_mkT("ESP 显示距离", "ED")
+
+local _ST = Instance.new("TextLabel", _SC)
+_ST.Size = UDim2.new(1, 0, 0, 50)
+_ST.BackgroundColor3 = Color3.fromRGB(15, 20, 30)
+_ST.TextColor3 = Color3.fromRGB(150, 200, 255)
+_ST.TextSize = 10
+_ST.Font = Enum.Font.Code
+_ST.Text = "初始化中..."
+_ST.TextXAlignment = Enum.TextXAlignment.Left
+_ST.TextYAlignment = Enum.TextYAlignment.Top
+_ST.TextWrapped = true
+_ST.ZIndex = 52
+Instance.new("UICorner", _ST).CornerRadius = UDim.new(0, 4)
+
+-- ============ 工具 ============
+local function _iE(model)
+    if not model then return false end
+    if tostring(model:GetAttribute("Dead")) == "true" then return false end
+    local h = model:GetAttribute("Health")
+    if h and h <= 0 then return false end
+    local ow = _P:FindFirstChild(model.Name)
+    if not ow then return false end
+    if _CF.TC then
+        local myT = _LP:GetAttribute("Team")
+        if myT and ow:GetAttribute("Team") == myT then return false end
+    end
+    return true
+end
+
+local function _gBB(m)
+    local ok, cf, size = pcall(function()
+        local c, s = m:GetBoundingBox()
+        return c, s
+    end)
+    if ok and cf and size and size.Y > 0 then
+        return cf.Position + Vector3.new(0, size.Y / 2, 0),
+               cf.Position - Vector3.new(0, size.Y / 2, 0)
+    end
+    local hrp = m:FindFirstChild("HumanoidRootPart")
+    if hrp then
+        return hrp.Position + Vector3.new(0, 3, 0),
+               hrp.Position - Vector3.new(0, 3, 0)
+    end
+    return nil, nil
+end
+
+-- ============ 子追 ============
+local _SO = nil
+local _SH = false
+local _SE = nil
+local _ct = nil
+local _lt = 0
+
+local function _fT()
+    local now = os.clock()
+    if now - _lt < 0.05 and _ct and _ct.Parent then return _ct end
+
+    local folder = _W:FindFirstChild("Characters")
+    if not folder then return nil end
+
+    local origin = _C.CFrame.Position
+    local center = _C.ViewportSize / 2
+    local best, bestScore
+
+    for _, m in ipairs(folder:GetChildren()) do
+        if m:IsA("Model") and m.Name ~= _LP.Name and _iE(m) then
+            local p = m:FindFirstChild(_CF.AP) or m:FindFirstChild("Head") or m:FindFirstChild("HumanoidRootPart")
+            if p then
+                local wd = (p.Position - origin).Magnitude
+                if wd <= _CF.MD then
+                    local sp, on = _C:WorldToViewportPoint(p.Position)
+                    if on then
+                        local sd = (Vector2.new(sp.X, sp.Y) - center).Magnitude
+                        if sd <= _CF.SF then
+                            local score = sd + wd * 0.02
+                            if not bestScore or score < bestScore then
+                                best, bestScore = p, score
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    _ct = best
+    _lt = now
+    return best
+end
+
+local function _rw(payload)
+    if type(payload) ~= "table" or type(payload.Bullets) ~= "table" then return end
+    local tp = _fT()
+    if not tp then return end
+    for _, b in ipairs(payload.Bullets) do
+        if type(b) == "table" and typeof(b.Origin) == "Vector3" then
+            local off = tp.Position - b.Origin
+            local d = off.Magnitude
+            if d > 0.1 then
+                b.Direction = off / d
+            end
+        end
+    end
+end
+
+local function _try()
+    if _SH then return true end
+    if not _SP then _SE = "找不到武器事件" return false end
+    if type(hookfunction) ~= "function" then _SE = "不支持 hook" return false end
+    local ok, result = pcall(hookfunction, _SP.Send, function(payload, ...)
+        if _CF.S then pcall(_rw, payload) end
+        if type(_SO) == "function" then
+            return _SO(payload, ...)
+        end
+    end)
+    if ok and type(result) == "function" then
+        _SO = result
+        _SH = true
+        return true
+    else
+        _SE = tostring(result)
+        return false
+    end
+end
+
+-- ============ ESP ============
+local _EB = {}
+local _EC2 = Instance.new("Frame", _SG)
+_EC2.Size = UDim2.new(1, 0, 1, 0)
+_EC2.Position = UDim2.new(0, 0, 0, 0)
+_EC2.BackgroundTransparency = 1
+_EC2.ZIndex = 45
+
+local _MX = 20
+
+task.spawn(function()
+    while true do
+        task.wait(0.15)
+
+        if not _CF.E then
+            for _, b in pairs(_EB) do
+                b.box.Visible = false
+                b.label.Visible = false
+            end
+        else
+            local folder = _W:FindFirstChild("Characters")
+            if folder then
+                local myTeam = _LP:GetAttribute("Team")
+                local myChar = _LP.Character
+                local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
+                local myPos = myHRP and myHRP.Position or _C.CFrame.Position
+                local processed = {}
+                local count = 0
+
+                for _, m in ipairs(folder:GetChildren()) do
+                    if count >= _MX then break end
+                    if m:IsA("Model") and m.Name ~= _LP.Name and _iE(m) then
+                        local topPos, botPos = _gBB(m)
+                        if topPos and botPos then
+                            processed[m] = true
+                            count = count + 1
+                            local topSp, topOn = _C:WorldToViewportPoint(topPos)
+                            local botSp, botOn = _C:WorldToViewportPoint(botPos)
+                            if topOn and botOn then
+                                local h = botSp.Y - topSp.Y
+                                if h > 4 then
+                                    if not _EB[m] then
+                                        local box = Instance.new("Frame")
+                                        box.BackgroundTransparency = 1
+                                        box.BorderSizePixel = 0
+                                        box.ZIndex = 45
+                                        box.Parent = _EC2
+                                        local stroke = Instance.new("UIStroke", box)
+                                        stroke.Thickness = 1.5
+                                        stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                                        local label = Instance.new("TextLabel")
+                                        label.Size = UDim2.new(0, 200, 0, 14)
+                                        label.BackgroundTransparency = 1
+                                        label.TextSize = 11
+                                        label.Font = Enum.Font.GothamBold
+                                        label.TextStrokeTransparency = 0
+                                        label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                                        label.TextXAlignment = Enum.TextXAlignment.Center
+                                        label.ZIndex = 46
+                                        label.Parent = _EC2
+                                        _EB[m] = { box = box, stroke = stroke, label = label }
+                                    end
+                                    local b = _EB[m]
+                                    local owner = _P:FindFirstChild(m.Name)
+                                    local isAlly = false
+                                    if _CF.EC and myTeam and owner then
+                                        if owner:GetAttribute("Team") == myTeam then
+                                            isAlly = true
+                                        end
+                                    end
+                                    local color = isAlly and Color3.fromRGB(60, 255, 100) or Color3.fromRGB(255, 60, 60)
+                                    local w = h * 0.55
+                                    local cx = (topSp.X + botSp.X) / 2
+                                    local leftX = cx - w / 2
+                                    b.box.Visible = true
+                                    b.box.Position = UDim2.new(0, leftX, 0, topSp.Y)
+                                    b.box.Size = UDim2.new(0, w, 0, h)
+                                    b.stroke.Color = color
+                                    b.label.Visible = true
+                                    b.label.Position = UDim2.new(0, cx - 100, 0, botSp.Y + 2)
+                                    if _CF.ED then
+                                        local d = (topPos - myPos).Magnitude
+                                        b.label.Text = string.format("%s [%dm]", m.Name:sub(1, 15), math.floor(d))
+                                    else
+                                        b.label.Text = m.Name:sub(1, 15)
+                                    end
+                                    b.label.TextColor3 = color
+                                else
+                                    if _EB[m] then
+                                        _EB[m].box.Visible = false
+                                        _EB[m].label.Visible = false
+                                    end
+                                end
+                            else
+                                if _EB[m] then
+                                    _EB[m].box.Visible = false
+                                    _EB[m].label.Visible = false
+                                end
+                            end
+                        end
+                    end
+                end
+
+                for mm, b in pairs(_EB) do
+                    if not processed[mm] then
+                        b.box:Destroy()
+                        b.label:Destroy()
+                        _EB[mm] = nil
+                    end
+                end
+            end
+        end
+    end
+end)
+
+task.spawn(function()
+    while true do
+        task.wait(0.5)
+        if _CF.S and not _SH then _try() end
+        local lines = {}
+        lines[#lines+1] = "子追: " .. (_CF.S and (_SH and "开启" or "错误") or "关闭")
+        lines[#lines+1] = "ESP: " .. (_CF.E and "开" or "关")
+        if _SE and _CF.S then
+            _ST.TextColor3 = Color3.fromRGB(255, 150, 100)
+            lines[#lines+1] = "错误: " .. _SE
+        else
+            _ST.TextColor3 = Color3.fromRGB(150, 200, 255)
+        end
+        _ST.Text = table.concat(lines, "\n")
+    end
+end)
+
+getgenv().W1762U = function()
+    pcall(function() _SG:Destroy() end)
+end
+
+print("[wan1762] V5.6 已加载")
