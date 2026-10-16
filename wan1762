@@ -1,54 +1,282 @@
 --[[
     ============================================
-    WAN1762 SECURE BUILD
+    wan1762 V6.1 SECURE
     ============================================
 ]]
-if not game:IsLoaded() then game.Loaded:Wait() end
-
-local _P = game:GetService("Players")
-local _R = game:GetService("ReplicatedStorage")
-local _RS = game:GetService("RunService")
-local _W = game:GetService("Workspace")
-local _U = game:GetService("UserInputService")
-
--- ★ 混淆字符串：远程事件路径
-local _S1 = string.char(68,97,116,97,98,97,115,101)          -- Database
-local _S2 = string.char(83,101,99,117,114,105,116,121)         -- Security
-local _S3 = string.char(82,101,109,111,116,101,115)            -- Remotes
-local _S4 = string.char(73,110,118,101,110,116,111,114,121)    -- Inventory
-local _S5 = string.char(83,104,111,111,116,87,101,97,112,111,110) -- ShootWeapon
-
--- 反调试陷阱（虚晃一枪）
-if getgenv and getgenv().____X == nil then
-    getgenv().____X = tostring(math.random(1, 999999))
+local _g = getgenv or function() return _G end
+local function _s(...)
+    local t = {...}
+    local r = ""
+    for _, v in ipairs(t) do r = r .. string.char(v) end
+    return r
 end
 
-local _LP = _P.LocalPlayer
-local _C = _W.CurrentCamera
+-- 解码字符串
+local _K1 = _s(65,115,115,101,116,115)                       -- Assets
+local _K2 = _s(83,107,105,110,115)                            -- Skins
+local _K3 = _s(67,104,97,114,97,99,116,101,114,115)            -- Characters
+local _K4 = _s(68,97,116,97,98,97,115,101)                    -- Database
+local _K5 = _s(83,101,99,117,114,105,116,121)                 -- Security
+local _K6 = _s(82,101,109,111,116,101,115)                     -- Remotes
+local _K7 = _s(73,110,118,101,110,116,111,114,121)            -- Inventory
+local _K8 = _s(83,104,111,111,116,87,101,97,112,111,110)      -- ShootWeapon
+local _K9 = _s(72,101,97,100)                                  -- Head
+local _K10 = _s(72,117,109,97,110,111,105,100,82,111,111,116,80,97,114,116)  -- HumanoidRootPart
+local _K11 = _s(68,101,97,100)                                 -- Dead
+local _K12 = _s(72,101,97,108,116,104)                         -- Health
+local _K13 = _s(84,101,97,109)                                 -- Team
+local _K14 = _s(65,117,100,105,111,76,105,115,116,101,110,101,114)  -- AudioListener
+local _K15 = _s(87,101,97,112,111,110)                         -- Weapon
+local _K16 = _s(67,97,109,101,114,97)                          -- Camera
+local _K17 = _s(70,97,99,116,111,114,121,32,78,101,119)        -- Factory New
+local _K18 = _s(66,97,116,116,108,101,45,83,99,97,114,114,101,100)  -- Battle-Scarred
+local _K19 = _s(83,116,111,99,107)                             -- Stock
+local _K20 = _s(76,101,102,116,32,65,114,109)                  -- Left Arm
+local _K21 = _s(82,105,103,104,116,32,65,114,109)              -- Right Arm
+local _K22 = _s(71,108,111,118,101)                            -- Glove
+local _K23 = _s(83,117,114,102,97,99,101,65,112,112,101,97,114,97,110,99,101)  -- SurfaceAppearance
 
-if getgenv and getgenv().W1762U then pcall(getgenv().W1762U) end
+if not game:IsLoaded() then game.Loaded:Wait() end
+
+local _P = game:GetService(_s(80,108,97,121,101,114,115))              -- Players
+local _R = game:GetService(_s(82,101,112,108,105,99,97,116,101,100,83,116,111,114,97,103,101))
+local _W = game:GetService(_s(87,111,114,107,115,112,97,99,101))
+local _U = game:GetService(_s(85,115,101,114,73,110,112,117,116,83,101,114,118,105,99,101))
+local _C = _W.CurrentCamera
+local _LP = _P.LocalPlayer
+
+-- 清理
+if _g()._W1762U then pcall(_g()._W1762U) end
 for _, v in ipairs(_LP.PlayerGui:GetChildren()) do
     if v.Name == "W1762UI" then v:Destroy() end
 end
 
--- 模块获取（路径混淆）
+-- 假代码（防逆向挖函数）
+local _fake = {}
+local function _dummy() return _fake end
+for i = 1, 5 do _fake[i] = _dummy() end
+
+-- 模块
 local _N = nil
 do
-    local _d = _R:FindFirstChild(_S1)
-    local _e = _d and _d:FindFirstChild(_S2)
-    local _f = _e and _e:FindFirstChild(_S3)
-    if _f then
-        local ok, m = pcall(require, _f)
+    local d = _R:FindFirstChild(_K4)
+    local s = d and d:FindFirstChild(_K5)
+    local r = s and s:FindFirstChild(_K6)
+    if r then
+        local ok, m = pcall(require, r)
         if ok then _N = m end
     end
 end
-local _SP = _N and _N[_S4] and _N[_S4][_S5]
+local _SP = _N and _N[_K7] and _N[_K7][_K8]
 
 local _CF = {
-    S = false, SF = 180, TC = true, MD = 800,
-    AP = "Head",
+    S = false, SF = 180, TC = true, MD = 800, AP = _K9,
     E = false, EC = true, ED = true,
+    AutoSkin = true,
 }
+
+-- ============ 皮肤系统 ============
+local _SK = {}
+_SK.Wep = {}
+_SK.Glove = nil
+
+function _SK:GetSkins(folder)
+    local r = {}
+    local sf = _R:FindFirstChild(_K1)
+    sf = sf and sf:FindFirstChild(_K2)
+    if not sf then return r end
+    local wf = sf:FindFirstChild(folder)
+    if not wf then return r end
+    for _, f in ipairs(wf:GetChildren()) do
+        if f.Name ~= _K19 then table.insert(r, f.Name) end
+    end
+    table.sort(r)
+    return r
+end
+
+function _SK:ApplySkin(vm, folder, skin, wear)
+    if not vm then return false end
+    wear = wear or _K17
+    local wm = vm:FindFirstChild(_K15)
+    if not wm then return false end
+    local sf = _R:FindFirstChild(_K1)
+    sf = sf and sf:FindFirstChild(_K2)
+    if not sf then return false end
+    local p = sf:FindFirstChild(folder)
+    if not p then return false end
+    p = p:FindFirstChild(skin)
+    if not p then return false end
+    p = p:FindFirstChild(_K16)
+    if not p then return false end
+    local wf = p:FindFirstChild(wear)
+    if not wf then
+        local k = p:GetChildren()
+        if #k > 0 then wf = k[1] end
+    end
+    if not wf then return false end
+    local sas = {}
+    for _, sa in ipairs(wf:GetChildren()) do
+        if sa:IsA(_K23) then sas[sa.Name] = sa end
+    end
+    local n = 0
+    for _, mp in ipairs(wm:GetDescendants()) do
+        if mp:IsA("MeshPart") then
+            local old = mp:FindFirstChildOfClass(_K23)
+            if old then
+                local s = sas[old.Name] or sas[mp.Name]
+                if s then
+                    local c = s:Clone()
+                    old:Destroy()
+                    c.Parent = mp
+                    n = n + 1
+                end
+            end
+        end
+    end
+    return n > 0
+end
+
+function _SK:ApplyGlove(vm, gType, skin, wear)
+    if not vm then return false end
+    wear = wear or _K18
+    local sf = _R:FindFirstChild(_K1)
+    sf = sf and sf:FindFirstChild(_K2)
+    if not sf then return false end
+    local p = sf:FindFirstChild(gType)
+    if not p then return false end
+    p = p:FindFirstChild(skin)
+    if not p then return false end
+    p = p:FindFirstChild(_K16)
+    if not p then return false end
+    local wf = p:FindFirstChild(wear)
+    if not wf then
+        local k = p:GetChildren()
+        if #k > 0 then wf = k[1] end
+    end
+    if not wf then return false end
+    local saMap = {}
+    for _, sa in ipairs(wf:GetChildren()) do
+        if sa:IsA(_K23) then saMap[sa.Name] = sa end
+    end
+    local n = 0
+    for _, arm in ipairs({_K20, _K21}) do
+        local a = vm:FindFirstChild(arm)
+        if a then
+            local gl = a:FindFirstChild(_K22)
+            if gl and gl:IsA("MeshPart") then
+                local old = gl:FindFirstChildOfClass(_K23)
+                local s = saMap[arm]
+                if old and s then
+                    local c = s:Clone()
+                    old:Destroy()
+                    c.Parent = gl
+                    n = n + 1
+                end
+            end
+        end
+    end
+    if n > 0 then self.Glove = {type = gType, skin = skin, wear = wear} end
+    return n > 0
+end
+
+local function getVM()
+    for _, c in ipairs(_C:GetChildren()) do
+        if c:IsA("Model") and c.Name ~= _K14 then return c end
+    end
+end
+
+_C.ChildAdded:Connect(function(child)
+    if not child:IsA("Model") or child.Name == _K14 then return end
+    if not _CF.AutoSkin then return end
+    task.delay(0.4, function()
+        pcall(function()
+            local vm = getVM()
+            if not vm then return end
+            local wd = _SK.Wep[vm.Name]
+            if wd then _SK:ApplySkin(vm, vm.Name, wd.skin, wd.wear) end
+            if _SK.Glove then _SK:ApplyGlove(vm, _SK.Glove.type, _SK.Glove.skin, _SK.Glove.wear) end
+        end)
+    end)
+end)
+
+-- ============ 子追 ============
+local _SO, _SH, _SE = nil, false, nil
+local _ct, _lt = nil, 0
+
+local function _iE(m)
+    if not m then return false end
+    if tostring(m:GetAttribute(_K11)) == "true" then return false end
+    local h = m:GetAttribute(_K12)
+    if h and h <= 0 then return false end
+    local ow = _P:FindFirstChild(m.Name)
+    if not ow then return false end
+    if _CF.TC then
+        local myT = _LP:GetAttribute(_K13)
+        if myT and ow:GetAttribute(_K13) == myT then return false end
+    end
+    return true
+end
+
+local function _fT()
+    local now = os.clock()
+    if now - _lt < 0.05 and _ct and _ct.Parent then return _ct end
+    local folder = _W:FindFirstChild(_K3)
+    if not folder then return nil end
+    local origin = _C.CFrame.Position
+    local center = _C.ViewportSize / 2
+    local best, bestScore
+    for _, m in ipairs(folder:GetChildren()) do
+        if m:IsA("Model") and m.Name ~= _LP.Name and _iE(m) then
+            local p = m:FindFirstChild(_CF.AP) or m:FindFirstChild(_K9) or m:FindFirstChild(_K10)
+            if p then
+                local wd = (p.Position - origin).Magnitude
+                if wd <= _CF.MD then
+                    local sp, on = _C:WorldToViewportPoint(p.Position)
+                    if on then
+                        local sd = (Vector2.new(sp.X, sp.Y) - center).Magnitude
+                        if sd <= _CF.SF then
+                            local score = sd + wd * 0.02
+                            if not bestScore or score < bestScore then
+                                best, bestScore = p, score
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    _ct = best
+    _lt = now
+    return best
+end
+
+local function _rw(payload)
+    if type(payload) ~= "table" or type(payload.Bullets) ~= "table" then return end
+    local tp = _fT()
+    if not tp then return end
+    for _, b in ipairs(payload.Bullets) do
+        if type(b) == "table" and typeof(b.Origin) == "Vector3" then
+            local off = tp.Position - b.Origin
+            local d = off.Magnitude
+            if d > 0.1 then b.Direction = off / d end
+        end
+    end
+end
+
+local function _try()
+    if _SH then return true end
+    if not _SP then _SE = "找不到武器事件" return false end
+    if type(hookfunction) ~= "function" then _SE = "不支持 hook" return false end
+    local ok, result = pcall(hookfunction, _SP.Send, function(payload, ...)
+        if _CF.S then pcall(_rw, payload) end
+        if type(_SO) == "function" then return _SO(payload, ...) end
+    end)
+    if ok and type(result) == "function" then
+        _SO = result _SH = true return true
+    else
+        _SE = tostring(result) return false
+    end
+end
 
 -- ============ UI ============
 local _SG = Instance.new("ScreenGui")
@@ -75,8 +303,8 @@ _BS.Color = Color3.fromRGB(100, 200, 255)
 _BS.Thickness = 2
 
 local _PN = Instance.new("Frame")
-_PN.Size = UDim2.new(0, 220, 0, 210)
-_PN.Position = UDim2.new(0.5, -110, 0.5, -105)
+_PN.Size = UDim2.new(0, 260, 0, 360)
+_PN.Position = UDim2.new(0.5, -130, 0.5, -180)
 _PN.BackgroundColor3 = Color3.fromRGB(12, 15, 22)
 _PN.BorderSizePixel = 0
 _PN.Visible = false
@@ -98,7 +326,7 @@ local _TT = Instance.new("TextLabel", _TB)
 _TT.Size = UDim2.new(1, -70, 1, 0)
 _TT.Position = UDim2.new(0, 10, 0, 0)
 _TT.BackgroundTransparency = 1
-_TT.Text = "wan1762 V5.6"
+_TT.Text = "wan1762"
 _TT.TextColor3 = Color3.fromRGB(100, 200, 255)
 _TT.TextSize = 12
 _TT.Font = Enum.Font.GothamBold
@@ -117,21 +345,84 @@ _CB.ZIndex = 52
 Instance.new("UICorner", _CB).CornerRadius = UDim.new(0, 5)
 _CB.Activated:Connect(function() _SG:Destroy() end)
 
-local _SC = Instance.new("ScrollingFrame", _PN)
-_SC.Size = UDim2.new(1, -12, 1, -38)
-_SC.Position = UDim2.new(0, 6, 0, 34)
-_SC.BackgroundTransparency = 1
-_SC.BorderSizePixel = 0
-_SC.ScrollBarThickness = 3
-_SC.ScrollBarImageColor3 = Color3.fromRGB(0, 170, 255)
-_SC.CanvasSize = UDim2.new(0, 0, 0, 0)
-_SC.AutomaticCanvasSize = Enum.AutomaticSize.Y
-_SC.ZIndex = 51
-local _SL = Instance.new("UIListLayout", _SC)
-_SL.Padding = UDim.new(0, 3)
-_SL.SortOrder = Enum.SortOrder.LayoutOrder
+local _TabBar = Instance.new("Frame", _PN)
+_TabBar.Size = UDim2.new(1, -12, 0, 26)
+_TabBar.Position = UDim2.new(0, 6, 0, 34)
+_TabBar.BackgroundColor3 = Color3.fromRGB(20, 25, 35)
+_TabBar.BorderSizePixel = 0
+_TabBar.ZIndex = 51
+Instance.new("UICorner", _TabBar).CornerRadius = UDim.new(0, 6)
 
--- 拖动
+local _TabActive = Instance.new("Frame", _TabBar)
+_TabActive.Size = UDim2.new(0.5, -2, 1, 0)
+_TabActive.Position = UDim2.new(0, 1, 0, 0)
+_TabActive.BackgroundColor3 = Color3.fromRGB(0, 100, 180)
+_TabActive.BorderSizePixel = 0
+_TabActive.ZIndex = 52
+Instance.new("UICorner", _TabActive).CornerRadius = UDim.new(0, 6)
+
+local _Tab1 = Instance.new("TextButton", _TabBar)
+_Tab1.Size = UDim2.new(0.5, -2, 1, 0)
+_Tab1.Position = UDim2.new(0, 1, 0, 0)
+_Tab1.BackgroundTransparency = 1
+_Tab1.Text = "功能"
+_Tab1.TextColor3 = Color3.fromRGB(255, 255, 255)
+_Tab1.TextSize = 11
+_Tab1.Font = Enum.Font.GothamBold
+_Tab1.ZIndex = 53
+
+local _Tab2 = Instance.new("TextButton", _TabBar)
+_Tab2.Size = UDim2.new(0.5, -2, 1, 0)
+_Tab2.Position = UDim2.new(0.5, 1, 0, 0)
+_Tab2.BackgroundTransparency = 1
+_Tab2.Text = "换皮"
+_Tab2.TextColor3 = Color3.fromRGB(150, 170, 200)
+_Tab2.TextSize = 11
+_Tab2.Font = Enum.Font.GothamBold
+_Tab2.ZIndex = 53
+
+local _P1 = Instance.new("ScrollingFrame", _PN)
+_P1.Size = UDim2.new(1, -12, 1, -100)
+_P1.Position = UDim2.new(0, 6, 0, 66)
+_P1.BackgroundTransparency = 1
+_P1.BorderSizePixel = 0
+_P1.ScrollBarThickness = 3
+_P1.ScrollBarImageColor3 = Color3.fromRGB(0, 170, 255)
+_P1.CanvasSize = UDim2.new(0, 0, 0, 0)
+_P1.AutomaticCanvasSize = Enum.AutomaticSize.Y
+_P1.ZIndex = 52
+local _P1L = Instance.new("UIListLayout", _P1)
+_P1L.Padding = UDim.new(0, 3)
+_P1L.SortOrder = Enum.SortOrder.LayoutOrder
+
+local _P2 = Instance.new("ScrollingFrame", _PN)
+_P2.Size = UDim2.new(1, -12, 1, -100)
+_P2.Position = UDim2.new(0, 6, 0, 66)
+_P2.BackgroundTransparency = 1
+_P2.BorderSizePixel = 0
+_P2.ScrollBarThickness = 3
+_P2.ScrollBarImageColor3 = Color3.fromRGB(255, 150, 50)
+_P2.CanvasSize = UDim2.new(0, 0, 0, 0)
+_P2.AutomaticCanvasSize = Enum.AutomaticSize.Y
+_P2.Visible = false
+_P2.ZIndex = 52
+local _P2L = Instance.new("UIListLayout", _P2)
+_P2L.Padding = UDim.new(0, 3)
+_P2L.SortOrder = Enum.SortOrder.LayoutOrder
+
+_Tab1.Activated:Connect(function()
+    _P1.Visible = true _P2.Visible = false
+    _TabActive.Position = UDim2.new(0, 1, 0, 0)
+    _Tab1.TextColor3 = Color3.fromRGB(255, 255, 255)
+    _Tab2.TextColor3 = Color3.fromRGB(150, 170, 200)
+end)
+_Tab2.Activated:Connect(function()
+    _P1.Visible = false _P2.Visible = true
+    _TabActive.Position = UDim2.new(0.5, 1, 0, 0)
+    _Tab2.TextColor3 = Color3.fromRGB(255, 255, 255)
+    _Tab1.TextColor3 = Color3.fromRGB(150, 170, 200)
+end)
+
 local _dg, _ds, _dp
 _TB.InputBegan:Connect(function(i)
     if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
@@ -174,14 +465,13 @@ _U.InputEnded:Connect(function(i)
     end
 end)
 
-local function _mkT(text, key)
-    local row = Instance.new("Frame", _SC)
+local function _mkT(parent, text, key)
+    local row = Instance.new("Frame", parent)
     row.Size = UDim2.new(1, 0, 0, 22)
     row.BackgroundColor3 = Color3.fromRGB(25, 30, 42)
     row.BorderSizePixel = 0
     row.ZIndex = 52
     Instance.new("UICorner", row).CornerRadius = UDim.new(0, 5)
-
     local label = Instance.new("TextLabel", row)
     label.Size = UDim2.new(1, -50, 1, 0)
     label.Position = UDim2.new(0, 8, 0, 0)
@@ -192,7 +482,6 @@ local function _mkT(text, key)
     label.Font = Enum.Font.Gotham
     label.TextXAlignment = Enum.TextXAlignment.Left
     label.ZIndex = 53
-
     local btn = Instance.new("TextButton", row)
     btn.Size = UDim2.new(0, 34, 0, 15)
     btn.Position = UDim2.new(1, -40, 0.5, -7)
@@ -201,7 +490,6 @@ local function _mkT(text, key)
     btn.AutoButtonColor = false
     btn.ZIndex = 53
     Instance.new("UICorner", btn).CornerRadius = UDim.new(1, 0)
-
     local knob = Instance.new("Frame", btn)
     knob.Size = UDim2.new(0, 11, 0, 11)
     knob.Position = UDim2.new(0, 2, 0.5, -5)
@@ -209,7 +497,6 @@ local function _mkT(text, key)
     knob.BorderSizePixel = 0
     knob.ZIndex = 54
     Instance.new("UICorner", knob).CornerRadius = UDim.new(1, 0)
-
     local function rf()
         if _CF[key] then
             btn.BackgroundColor3 = Color3.fromRGB(0, 180, 100)
@@ -226,8 +513,8 @@ local function _mkT(text, key)
     rf()
 end
 
-local function _mkS(text)
-    local l = Instance.new("TextLabel", _SC)
+local function _mkS(parent, text)
+    local l = Instance.new("TextLabel", parent)
     l.Size = UDim2.new(1, 0, 0, 16)
     l.BackgroundTransparency = 1
     l.Text = text
@@ -238,42 +525,369 @@ local function _mkS(text)
     l.ZIndex = 52
 end
 
-_mkS("子追")
-_mkT("开启子追", "S")
-_mkT("队伍检测", "TC")
+local function _mkBtn(parent, text, color, cb)
+    local btn = Instance.new("TextButton", parent)
+    btn.Size = UDim2.new(1, 0, 0, 26)
+    btn.BackgroundColor3 = Color3.fromRGB(30, 35, 50)
+    btn.BorderSizePixel = 0
+    btn.Text = text
+    btn.TextColor3 = color or Color3.fromRGB(220, 220, 220)
+    btn.TextSize = 11
+    btn.Font = Enum.Font.GothamBold
+    btn.AutoButtonColor = false
+    btn.ZIndex = 52
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
+    local stroke = Instance.new("UIStroke", btn)
+    stroke.Color = color or Color3.fromRGB(100, 100, 100)
+    stroke.Thickness = 1
+    stroke.Transparency = 0.6
+    btn.Activated:Connect(function() if cb then cb() end end)
+    return btn
+end
 
-_mkS("ESP")
-_mkT("开启 ESP", "E")
-_mkT("ESP 队伍检测", "EC")
-_mkT("ESP 显示距离", "ED")
+_mkS(_P1, "子追")
+_mkT(_P1, "开启子追", "S")
+_mkT(_P1, "队伍检测", "TC")
 
-local _ST = Instance.new("TextLabel", _SC)
+_mkS(_P1, "ESP")
+_mkT(_P1, "开启 ESP", "E")
+_mkT(_P1, "ESP 队伍检测", "EC")
+_mkT(_P1, "ESP 显示距离", "ED")
+
+local _ST = Instance.new("TextLabel", _P1)
 _ST.Size = UDim2.new(1, 0, 0, 50)
 _ST.BackgroundColor3 = Color3.fromRGB(15, 20, 30)
 _ST.TextColor3 = Color3.fromRGB(150, 200, 255)
 _ST.TextSize = 10
 _ST.Font = Enum.Font.Code
-_ST.Text = "初始化中..."
+_ST.Text = "..."
 _ST.TextXAlignment = Enum.TextXAlignment.Left
 _ST.TextYAlignment = Enum.TextYAlignment.Top
 _ST.TextWrapped = true
 _ST.ZIndex = 52
 Instance.new("UICorner", _ST).CornerRadius = UDim.new(0, 4)
 
--- ============ 工具 ============
-local function _iE(model)
-    if not model then return false end
-    if tostring(model:GetAttribute("Dead")) == "true" then return false end
-    local h = model:GetAttribute("Health")
-    if h and h <= 0 then return false end
-    local ow = _P:FindFirstChild(model.Name)
-    if not ow then return false end
-    if _CF.TC then
-        local myT = _LP:GetAttribute("Team")
-        if myT and ow:GetAttribute("Team") == myT then return false end
+_mkS(_P2, "当前武器")
+_mkT(_P2, "换武器自动应用", "AutoSkin")
+
+local _WepSt = Instance.new("TextLabel", _P2)
+_WepSt.Size = UDim2.new(1, 0, 0, 26)
+_WepSt.BackgroundColor3 = Color3.fromRGB(15, 20, 30)
+_WepSt.TextColor3 = Color3.fromRGB(150, 200, 255)
+_WepSt.TextSize = 10
+_WepSt.Font = Enum.Font.Gotham
+_WepSt.Text = "  手持武器后点下方加载"
+_WepSt.TextXAlignment = Enum.TextXAlignment.Left
+_WepSt.ZIndex = 52
+Instance.new("UICorner", _WepSt).CornerRadius = UDim.new(0, 4)
+
+local _WepList = Instance.new("Frame", _P2)
+_WepList.Size = UDim2.new(1, 0, 0, 0)
+_WepList.BackgroundTransparency = 1
+_WepList.ZIndex = 52
+_WepList.AutomaticSize = Enum.AutomaticSize.Y
+local _WepListL = Instance.new("UIListLayout", _WepList)
+_WepListL.Padding = UDim.new(0, 2)
+_WepListL.SortOrder = Enum.SortOrder.LayoutOrder
+
+local function clearWepList()
+    for _, c in ipairs(_WepList:GetChildren()) do
+        if c:IsA("TextButton") then c:Destroy() end
     end
-    return true
 end
+
+local function makeSkinBtn(parent, skinName, isActive, onClick)
+    local btn = Instance.new("TextButton", parent)
+    btn.Size = UDim2.new(1, 0, 0, 24)
+    btn.BackgroundColor3 = isActive and Color3.fromRGB(30, 70, 40) or Color3.fromRGB(25, 30, 42)
+    btn.BorderSizePixel = 0
+    btn.Text = (isActive and "✓  " or "   ") .. skinName
+    btn.TextColor3 = isActive and Color3.fromRGB(100, 255, 100) or Color3.fromRGB(210, 220, 240)
+    btn.TextSize = 10
+    btn.Font = Enum.Font.Gotham
+    btn.TextXAlignment = Enum.TextXAlignment.Left
+    btn.AutoButtonColor = false
+    btn.ZIndex = 53
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 4)
+    btn.Activated:Connect(function() if onClick then onClick() end end)
+    return btn
+end
+
+local function loadWepSkins()
+    clearWepList()
+    local vm = getVM()
+    if not vm then
+        _WepSt.Text = "  无武器"
+        _WepSt.TextColor3 = Color3.fromRGB(255, 100, 100)
+        return
+    end
+    _WepSt.Text = "  " .. vm.Name
+    _WepSt.TextColor3 = Color3.fromRGB(255, 200, 0)
+    local skins = _SK:GetSkins(vm.Name)
+    if #skins == 0 then
+        _WepSt.Text = "  " .. vm.Name .. " — 无可用皮肤"
+        _WepSt.TextColor3 = Color3.fromRGB(150, 150, 150)
+        return
+    end
+    _WepSt.Text = "  " .. vm.Name .. " — " .. #skins .. " 个"
+    _WepSt.TextColor3 = Color3.fromRGB(100, 255, 100)
+    local wn = vm.Name
+    local active = _SK.Wep[wn]
+    for _, sn in ipairs(skins) do
+        local isA = active and active.skin == sn
+        makeSkinBtn(_WepList, sn, isA, function()
+            local cv = getVM()
+            if not cv or cv.Name ~= wn then
+                _WepSt.Text = "  " .. wn .. " 不在手上"
+                _WepSt.TextColor3 = Color3.fromRGB(255, 100, 100)
+                return
+            end
+            if _SK:ApplySkin(cv, wn, sn) then
+                _SK.Wep[wn] = {skin = sn, wear = _K17}
+                _WepSt.Text = "  ✓ " .. wn .. " - " .. sn
+                _WepSt.TextColor3 = Color3.fromRGB(100, 255, 100)
+                loadWepSkins()
+            else
+                _WepSt.Text = "  ✗ 应用失败"
+                _WepSt.TextColor3 = Color3.fromRGB(255, 100, 100)
+            end
+        end)
+    end
+end
+
+_mkBtn(_P2, "⟳  加载当前武器皮肤", Color3.fromRGB(100, 200, 255), loadWepSkins)
+
+_mkS(_P2, "全武器皮肤库")
+
+local _BrowseSt = Instance.new("TextLabel", _P2)
+_BrowseSt.Size = UDim2.new(1, 0, 0, 40)
+_BrowseSt.BackgroundColor3 = Color3.fromRGB(15, 20, 30)
+_BrowseSt.TextColor3 = Color3.fromRGB(150, 200, 255)
+_BrowseSt.TextSize = 10
+_BrowseSt.Font = Enum.Font.Code
+_BrowseSt.Text = "  点下方按钮扫描游戏内全部皮肤"
+_BrowseSt.TextXAlignment = Enum.TextXAlignment.Left
+_BrowseSt.TextYAlignment = Enum.TextYAlignment.Top
+_BrowseSt.TextWrapped = true
+_BrowseSt.ZIndex = 52
+Instance.new("UICorner", _BrowseSt).CornerRadius = UDim.new(0, 4)
+
+local _BrowseList = Instance.new("Frame", _P2)
+_BrowseList.Size = UDim2.new(1, 0, 0, 0)
+_BrowseList.BackgroundTransparency = 1
+_BrowseList.ZIndex = 52
+_BrowseList.AutomaticSize = Enum.AutomaticSize.Y
+local _BrowseListL = Instance.new("UIListLayout", _BrowseList)
+_BrowseListL.Padding = UDim.new(0, 2)
+_BrowseListL.SortOrder = Enum.SortOrder.LayoutOrder
+
+local function clearBrowse()
+    for _, c in ipairs(_BrowseList:GetChildren()) do
+        if c:IsA("TextButton") then c:Destroy() end
+    end
+end
+
+local function getAllWeapons()
+    local result = {}
+    local sf = _R:FindFirstChild(_K1)
+    sf = sf and sf:FindFirstChild(_K2)
+    if not sf then return result end
+    for _, wf in ipairs(sf:GetChildren()) do
+        local skins = {}
+        for _, sk in ipairs(wf:GetChildren()) do
+            if sk.Name ~= _K19 then
+                table.insert(skins, sk.Name)
+            end
+        end
+        if #skins > 0 then
+            table.sort(skins)
+            table.insert(result, {name = wf.Name, skins = skins})
+        end
+    end
+    table.sort(result, function(a, b) return a.name < b.name end)
+    return result
+end
+
+local function currentWepName()
+    local vm = getVM()
+    return vm and vm.Name or nil
+end
+
+local function loadBrowse()
+    clearBrowse()
+    local weapons = getAllWeapons()
+    if #weapons == 0 then
+        _BrowseSt.Text = "  ❌ 找不到皮肤库"
+        _BrowseSt.TextColor3 = Color3.fromRGB(255, 100, 100)
+        return
+    end
+    _BrowseSt.Text = "  共 " .. #weapons .. " 种武器"
+    _BrowseSt.TextColor3 = Color3.fromRGB(100, 255, 100)
+
+    local cur = currentWepName()
+
+    for _, w in ipairs(weapons) do
+        local isCurrent = (cur == w.name)
+        local catBtn = Instance.new("TextButton", _BrowseList)
+        catBtn.Size = UDim2.new(1, 0, 0, 26)
+        catBtn.BackgroundColor3 = isCurrent and Color3.fromRGB(40, 70, 100) or Color3.fromRGB(30, 35, 50)
+        catBtn.BorderSizePixel = 0
+        catBtn.Text = "🔫  " .. w.name .. "  (" .. #w.skins .. ")"
+        catBtn.TextColor3 = isCurrent and Color3.fromRGB(100, 200, 255) or Color3.fromRGB(200, 210, 230)
+        catBtn.TextSize = 11
+        catBtn.Font = Enum.Font.GothamBold
+        catBtn.TextXAlignment = Enum.TextXAlignment.Left
+        catBtn.AutoButtonColor = false
+        catBtn.ZIndex = 53
+        Instance.new("UICorner", catBtn).CornerRadius = UDim.new(0, 4)
+
+        local expanded = false
+        local skinBtns = {}
+        local container = Instance.new("Frame", _BrowseList)
+        container.Size = UDim2.new(1, 0, 0, 0)
+        container.BackgroundTransparency = 1
+        container.ZIndex = 52
+        container.AutomaticSize = Enum.AutomaticSize.Y
+        local cl = Instance.new("UIListLayout", container)
+        cl.Padding = UDim.new(0, 2)
+
+        catBtn.Activated:Connect(function()
+            if expanded then
+                for _, sb in ipairs(skinBtns) do sb:Destroy() end
+                skinBtns = {}
+                expanded = false
+                catBtn.TextColor3 = isCurrent and Color3.fromRGB(100, 200, 255) or Color3.fromRGB(200, 210, 230)
+                return
+            end
+            expanded = true
+            catBtn.TextColor3 = Color3.fromRGB(100, 255, 100)
+
+            local active = _SK.Wep[w.name]
+            for _, sn in ipairs(w.skins) do
+                local isA = active and active.skin == sn
+                local sb = makeSkinBtn(container, sn, isA, function()
+                    local vm = getVM()
+                    if not vm then
+                        _BrowseSt.Text = "  ❌ 无武器在手"
+                        _BrowseSt.TextColor3 = Color3.fromRGB(255, 100, 100)
+                        return
+                    end
+                    if vm.Name ~= w.name then
+                        _BrowseSt.Text = "  ⚠️ 需手持 " .. w.name
+                        _BrowseSt.TextColor3 = Color3.fromRGB(255, 200, 100)
+                        return
+                    end
+                    if _SK:ApplySkin(vm, w.name, sn) then
+                        _SK.Wep[w.name] = {skin = sn, wear = _K17}
+                        _BrowseSt.Text = "  ✓ 已应用 " .. w.name .. " - " .. sn
+                        _BrowseSt.TextColor3 = Color3.fromRGB(100, 255, 100)
+                        loadBrowse()
+                    else
+                        _BrowseSt.Text = "  ✗ 应用失败"
+                        _BrowseSt.TextColor3 = Color3.fromRGB(255, 100, 100)
+                    end
+                end)
+                table.insert(skinBtns, sb)
+            end
+        end)
+    end
+end
+
+_mkBtn(_P2, "🔍  扫描全武器皮肤库", Color3.fromRGB(255, 150, 50), loadBrowse)
+
+_mkS(_P2, "手套皮肤")
+
+local _GlvSt = Instance.new("TextLabel", _P2)
+_GlvSt.Size = UDim2.new(1, 0, 0, 20)
+_GlvSt.BackgroundTransparency = 1
+_GlvSt.TextColor3 = Color3.fromRGB(150, 200, 255)
+_GlvSt.TextSize = 10
+_GlvSt.Font = Enum.Font.Gotham
+_GlvSt.Text = "  选择下方手套类型"
+_GlvSt.TextXAlignment = Enum.TextXAlignment.Left
+_GlvSt.ZIndex = 52
+
+local GLOVES = {"Hand Wraps", "Sports Gloves", "Driver Gloves", "Operator Gloves", "Specialist Gloves", "Moto Gloves"}
+
+local _GloveList = Instance.new("Frame", _P2)
+_GloveList.Size = UDim2.new(1, 0, 0, 0)
+_GloveList.BackgroundTransparency = 1
+_GloveList.ZIndex = 52
+_GloveList.AutomaticSize = Enum.AutomaticSize.Y
+local _GloveListL = Instance.new("UIListLayout", _GloveList)
+_GloveListL.Padding = UDim.new(0, 2)
+
+for _, gType in ipairs(GLOVES) do
+    local skins = _SK:GetSkins(gType)
+    if #skins > 0 then
+        local catBtn = Instance.new("TextButton", _GloveList)
+        catBtn.Size = UDim2.new(1, 0, 0, 26)
+        catBtn.BackgroundColor3 = Color3.fromRGB(30, 35, 50)
+        catBtn.BorderSizePixel = 0
+        catBtn.Text = "🧤  " .. gType .. "  (" .. #skins .. ")"
+        catBtn.TextColor3 = Color3.fromRGB(200, 210, 230)
+        catBtn.TextSize = 11
+        catBtn.Font = Enum.Font.GothamBold
+        catBtn.TextXAlignment = Enum.TextXAlignment.Left
+        catBtn.AutoButtonColor = false
+        catBtn.ZIndex = 53
+        Instance.new("UICorner", catBtn).CornerRadius = UDim.new(0, 4)
+
+        local expanded = false
+        local skinBtns = {}
+        local container = Instance.new("Frame", _GloveList)
+        container.Size = UDim2.new(1, 0, 0, 0)
+        container.BackgroundTransparency = 1
+        container.ZIndex = 52
+        container.AutomaticSize = Enum.AutomaticSize.Y
+        local cl = Instance.new("UIListLayout", container)
+        cl.Padding = UDim.new(0, 2)
+
+        catBtn.Activated:Connect(function()
+            if expanded then
+                for _, sb in ipairs(skinBtns) do sb:Destroy() end
+                skinBtns = {}
+                expanded = false
+                catBtn.TextColor3 = Color3.fromRGB(200, 210, 230)
+                return
+            end
+            expanded = true
+            catBtn.TextColor3 = Color3.fromRGB(100, 255, 100)
+            for _, sn in ipairs(skins) do
+                local isA = _SK.Glove and _SK.Glove.type == gType and _SK.Glove.skin == sn
+                local sb = makeSkinBtn(container, sn, isA, function()
+                    local vm = getVM()
+                    if not vm then return end
+                    if _SK:ApplyGlove(vm, gType, sn) then
+                        _GlvSt.Text = "  当前: " .. gType .. " - " .. sn
+                        _GlvSt.TextColor3 = Color3.fromRGB(100, 255, 100)
+                    end
+                end)
+                table.insert(skinBtns, sb)
+            end
+        end)
+    end
+end
+
+_mkS(_P2, "")
+_mkBtn(_P2, "🗑  重置全部皮肤", Color3.fromRGB(255, 100, 100), function()
+    _SK.Wep = {}
+    _SK.Glove = nil
+    _GlvSt.Text = "  已重置"
+    _WepSt.Text = "  手持武器后点下方加载"
+    _WepSt.TextColor3 = Color3.fromRGB(150, 200, 255)
+    _BrowseSt.Text = "  点下方按钮扫描游戏内全部皮肤"
+    _BrowseSt.TextColor3 = Color3.fromRGB(150, 200, 255)
+    clearWepList()
+    clearBrowse()
+end)
+
+-- ============ ESP ============
+local _EB = {}
+local _EC2 = Instance.new("Frame", _SG)
+_EC2.Size = UDim2.new(1, 0, 1, 0)
+_EC2.BackgroundTransparency = 1
+_EC2.ZIndex = 45
 
 local function _gBB(m)
     local ok, cf, size = pcall(function()
@@ -284,7 +898,7 @@ local function _gBB(m)
         return cf.Position + Vector3.new(0, size.Y / 2, 0),
                cf.Position - Vector3.new(0, size.Y / 2, 0)
     end
-    local hrp = m:FindFirstChild("HumanoidRootPart")
+    local hrp = m:FindFirstChild(_K10)
     if hrp then
         return hrp.Position + Vector3.new(0, 3, 0),
                hrp.Position - Vector3.new(0, 3, 0)
@@ -292,116 +906,25 @@ local function _gBB(m)
     return nil, nil
 end
 
--- ============ 子追 ============
-local _SO = nil
-local _SH = false
-local _SE = nil
-local _ct = nil
-local _lt = 0
-
-local function _fT()
-    local now = os.clock()
-    if now - _lt < 0.05 and _ct and _ct.Parent then return _ct end
-
-    local folder = _W:FindFirstChild("Characters")
-    if not folder then return nil end
-
-    local origin = _C.CFrame.Position
-    local center = _C.ViewportSize / 2
-    local best, bestScore
-
-    for _, m in ipairs(folder:GetChildren()) do
-        if m:IsA("Model") and m.Name ~= _LP.Name and _iE(m) then
-            local p = m:FindFirstChild(_CF.AP) or m:FindFirstChild("Head") or m:FindFirstChild("HumanoidRootPart")
-            if p then
-                local wd = (p.Position - origin).Magnitude
-                if wd <= _CF.MD then
-                    local sp, on = _C:WorldToViewportPoint(p.Position)
-                    if on then
-                        local sd = (Vector2.new(sp.X, sp.Y) - center).Magnitude
-                        if sd <= _CF.SF then
-                            local score = sd + wd * 0.02
-                            if not bestScore or score < bestScore then
-                                best, bestScore = p, score
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-
-    _ct = best
-    _lt = now
-    return best
-end
-
-local function _rw(payload)
-    if type(payload) ~= "table" or type(payload.Bullets) ~= "table" then return end
-    local tp = _fT()
-    if not tp then return end
-    for _, b in ipairs(payload.Bullets) do
-        if type(b) == "table" and typeof(b.Origin) == "Vector3" then
-            local off = tp.Position - b.Origin
-            local d = off.Magnitude
-            if d > 0.1 then
-                b.Direction = off / d
-            end
-        end
-    end
-end
-
-local function _try()
-    if _SH then return true end
-    if not _SP then _SE = "找不到武器事件" return false end
-    if type(hookfunction) ~= "function" then _SE = "不支持 hook" return false end
-    local ok, result = pcall(hookfunction, _SP.Send, function(payload, ...)
-        if _CF.S then pcall(_rw, payload) end
-        if type(_SO) == "function" then
-            return _SO(payload, ...)
-        end
-    end)
-    if ok and type(result) == "function" then
-        _SO = result
-        _SH = true
-        return true
-    else
-        _SE = tostring(result)
-        return false
-    end
-end
-
--- ============ ESP ============
-local _EB = {}
-local _EC2 = Instance.new("Frame", _SG)
-_EC2.Size = UDim2.new(1, 0, 1, 0)
-_EC2.Position = UDim2.new(0, 0, 0, 0)
-_EC2.BackgroundTransparency = 1
-_EC2.ZIndex = 45
-
-local _MX = 20
-
 task.spawn(function()
     while true do
         task.wait(0.15)
-
         if not _CF.E then
             for _, b in pairs(_EB) do
                 b.box.Visible = false
                 b.label.Visible = false
             end
         else
-            local folder = _W:FindFirstChild("Characters")
+            local folder = _W:FindFirstChild(_K3)
             if folder then
-                local myTeam = _LP:GetAttribute("Team")
+                local myTeam = _LP:GetAttribute(_K13)
                 local myChar = _LP.Character
-                local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
+                local myHRP = myChar and myChar:FindFirstChild(_K10)
                 local myPos = myHRP and myHRP.Position or _C.CFrame.Position
                 local processed = {}
                 local count = 0
-
                 for _, m in ipairs(folder:GetChildren()) do
-                    if count >= _MX then break end
+                    if count >= 20 then break end
                     if m:IsA("Model") and m.Name ~= _LP.Name and _iE(m) then
                         local topPos, botPos = _gBB(m)
                         if topPos and botPos then
@@ -437,16 +960,13 @@ task.spawn(function()
                                     local owner = _P:FindFirstChild(m.Name)
                                     local isAlly = false
                                     if _CF.EC and myTeam and owner then
-                                        if owner:GetAttribute("Team") == myTeam then
-                                            isAlly = true
-                                        end
+                                        if owner:GetAttribute(_K13) == myTeam then isAlly = true end
                                     end
                                     local color = isAlly and Color3.fromRGB(60, 255, 100) or Color3.fromRGB(255, 60, 60)
                                     local w = h * 0.55
                                     local cx = (topSp.X + botSp.X) / 2
-                                    local leftX = cx - w / 2
                                     b.box.Visible = true
-                                    b.box.Position = UDim2.new(0, leftX, 0, topSp.Y)
+                                    b.box.Position = UDim2.new(0, cx - w / 2, 0, topSp.Y)
                                     b.box.Size = UDim2.new(0, w, 0, h)
                                     b.stroke.Color = color
                                     b.label.Visible = true
@@ -458,27 +978,14 @@ task.spawn(function()
                                         b.label.Text = m.Name:sub(1, 15)
                                     end
                                     b.label.TextColor3 = color
-                                else
-                                    if _EB[m] then
-                                        _EB[m].box.Visible = false
-                                        _EB[m].label.Visible = false
-                                    end
-                                end
-                            else
-                                if _EB[m] then
-                                    _EB[m].box.Visible = false
-                                    _EB[m].label.Visible = false
                                 end
                             end
                         end
                     end
                 end
-
                 for mm, b in pairs(_EB) do
                     if not processed[mm] then
-                        b.box:Destroy()
-                        b.label:Destroy()
-                        _EB[mm] = nil
+                        b.box:Destroy() b.label:Destroy() _EB[mm] = nil
                     end
                 end
             end
@@ -503,8 +1010,8 @@ task.spawn(function()
     end
 end)
 
-getgenv().W1762U = function()
+_g()._W1762U = function()
     pcall(function() _SG:Destroy() end)
 end
 
-print("[wan1762] V5.6 已加载")
+print("[wan1762] loaded")
